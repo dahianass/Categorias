@@ -1,0 +1,176 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2017.3.1026/styles/kendo.common.min.css" />
+    <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2017.3.1026/styles/kendo.blueopal.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.0.9/sweetalert2.css">
+    <style>
+        .contact-info-form {
+            list-style-type: none;
+            margin: 30px 0;
+            padding: 0;
+        }
+
+            .contact-info-form li {
+                margin: 10px 0;
+            }
+
+            .contact-info-form label {
+                display: inline-block;
+                width: 100px;
+                text-align: right;
+                font-weight: bold;
+            }
+
+        #example {
+            width: 90% !important;
+        }
+
+        .fomulario {
+            width: 80%;
+            margin-left: 10%;
+            margin-top: 5%;
+        }
+
+        .mar {
+            margin-top: 4%;
+            margin-bottom:2%;
+        }
+             .mar1 {
+            margin-top: 3%;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="fomulario" ng-app="CategoriasApp" ng-controller="CategoriaCtrl as vm">
+        <form>
+            <div>
+                <div class="row">
+                    <div class="col-md-4  col-xs-10">
+                        <label class="" for="">Nombre</label>
+                        <input type="text" class="form-control" ng-model="vm.Nombre" name="Nombre" required>
+                    </div>
+                    <div class="col-md-4  col-xs-10">
+                        <label class="" for="">Descripción</label>
+                        <input type="text" class="form-control" ng-model="vm.Descripcion" name="Descripcion">
+                    </div>
+                    <div class="col-md-2  col-xs-10">
+                        <label class="" for="">Categorias</label>
+                        <div ng-repeat="C in vm.Categorias">
+                            <input type="checkbox" ng-model="vm.selecion[C]" ng-click="vm.selectCt(C)"> {{C}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row mar">
+                    <div class="col-md-4  col-xs-10">
+                        <label class="">Tipo de contenido</label>
+                        <select class="form-control" ng-model="vm.TipoContenido">
+                            <option value="">---Seleccione---</option>
+                            <option value="Texto">Texto</option>
+                            <option value="imagen">imagen</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4  col-xs-10">
+                        <div ng-show="vm.TipoContenido=='Texto'">
+                            <textarea class="form-control" ng-keyup="vm.validations()" ng-model="vm.DescripcionContenido" maxlength="50"></textarea>
+                            Total caracteres {{vm.TotalCaracteres}}
+                        </div>
+                        <div ng-show="vm.TipoContenido=='imagen'">
+                            <input type="file" id="file" name="file" />
+                            <button ng-click="vm.addImagen()">Add</button>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row mar">
+                    <div class="col-md-2  col-xs-10">
+                        <label class="" for="">Etiquetas</label>
+                        <input type="text" class="form-control" ng-model="vm.NombreE">
+                    </div>
+                    <div class="col-md-1 mar1">
+                        <input class="form-control" type="button" value="+" ng-click="vm.AddEtiqueta()" />
+                    </div>
+                    <div class="col-md-6 mar1">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <td>Nombre de la etiqueta</td>
+                                <td></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="e in vm.Etiqueta">
+                                <td>{{ e }}</td>
+                                <td><input class="form-control" type="button" value="Eliminar" ng-click="vm.eliminar(e)" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+            </div>
+            <div class="">
+                <input type="submit" value="Guardar" ng-click="vm.GuardarContenido();"/>
+            </div>
+            <div class="mar" id="example">
+                <kendo-grid data-k-rebind="gridOptions.selectable" options="vm.mainGridOptions">
+                </kendo-grid>
+            </div>
+            <div id="myModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Modal Header</h4>
+                        </div>
+                        <div class="modal-body">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <td>Categorias</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="e in vm.CategoriaXContenido">
+                                        <td>{{ e.Nombre }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <td>Etiqueta</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="e in vm.EtiquetaXContenido">
+                                        <td>{{ e.Nombre }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                           
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+<script src="../Scripts/angular.js"></script>
+<script src="http://kendo.cdn.telerik.com/2017.3.1026/js/kendo.all.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="http://underscorejs.org/underscore-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.0.9/sweetalert2.all.js"></script>
+
+<script src="Script/Categoria.js"></script>
